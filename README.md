@@ -146,20 +146,6 @@
   .add-btn.pre:hover{background:#3a78e0;}
   .add-btn.added{background:var(--green); pointer-events:none;}
 
-  /* ---------- record explainer ---------- */
-  .record-box{
-    background:var(--panel); border:1px solid var(--line); border-radius:14px;
-    padding:24px 26px; margin-top:50px;
-  }
-  .record-box h3{font-family:var(--font-display); margin:0 0 6px; font-size:18px;}
-  .record-box p{color:var(--text-dim); font-size:13.5px; margin:0 0 16px; line-height:1.5;}
-  table.record-table{width:100%; border-collapse:collapse; font-size:13px;}
-  table.record-table th, table.record-table td{
-    text-align:left; padding:8px 10px; border-bottom:1px solid var(--line);
-  }
-  table.record-table th{color:var(--gold); font-family:var(--font-display); font-weight:700; font-size:12px; letter-spacing:0.5px;}
-  table.record-table td.key-row{color:var(--text);}
-  .key-tag{background:var(--red); color:#fff; font-size:10px; font-weight:700; padding:2px 7px; border-radius:5px; margin-left:6px;}
 
   /* ---------- cart drawer ---------- */
   .overlay{
@@ -245,22 +231,6 @@
 <main>
   <div class="section-title">Catálogo</div>
   <div class="grid" id="catalog"></div>
-
-  <div class="record-box">
-    <h3>🗂️ Sobre el registro de este catálogo</h3>
-    <p>Cada bundle mostrado arriba es una instancia del registro <b>Producto</b>, vinculado al registro <b>Expansión</b> mediante <code>codigo_expansion</code>. La clave primaria de Producto es <code>sku_bundle</code> porque identifica de forma única e irrepetible cada bundle, incluso si dos bundles comparten nombre, expansión o precio.</p>
-    <table class="record-table">
-      <tr><th>Campo</th><th>Tipo de dato</th><th>Ejemplo</th></tr>
-      <tr><td class="key-row">sku_bundle <span class="key-tag">CLAVE</span></td><td>Texto (string, alfanumérico, único)</td><td>"BND-MEG01-009"</td></tr>
-      <tr><td>nombre_bundle</td><td>Texto (string)</td><td>"Bundle Triple Megaevoluciones"</td></tr>
-      <tr><td>codigo_expansion</td><td>Texto (string, clave foránea)</td><td>"MEG01"</td></tr>
-      <tr><td>cantidad_sobres</td><td>Entero (integer)</td><td>6</td></tr>
-      <tr><td>precio_unitario</td><td>Decimal (float/money)</td><td>54999.00</td></tr>
-      <tr><td>stock_disponible</td><td>Entero (integer)</td><td>12</td></tr>
-      <tr><td>es_preorden</td><td>Booleano (boolean)</td><td>false</td></tr>
-      <tr><td>fecha_lanzamiento</td><td>Fecha (date, nullable)</td><td>2026-09-12</td></tr>
-    </table>
-  </div>
 </main>
 
 <footer>PokéBundle TCG — proyecto educativo, Unidad 2: Registros y Claves. No afiliado a The Pokémon Company.</footer>
@@ -465,4 +435,3 @@ renderCart();
 </script>
 </body>
 </html>
-
