@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,12 +8,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #14161b;
-    --panel: #1d2026;
-    --panel-2: #242832;
-    --line: #323744;
-    --text: #f2f0e9;
-    --text-dim: #9aa0ad;
+    --bg: #1a0e0c;
+    --panel: #2a1411;
+    --panel-2: #3a1a15;
+    --line: #5a2a22;
+    --text: #f7ece6;
+    --text-dim: #c89a8c;
     --red: #e3350d;
     --red-dim: #7a1e0a;
     --gold: #f4b942;
@@ -29,7 +28,7 @@
   /* ---------- top bar ---------- */
   header.top{
     position:sticky; top:0; z-index:50;
-    background:rgba(20,22,27,0.92); backdrop-filter:blur(8px);
+    background:rgba(26,14,12,0.92); backdrop-filter:blur(8px);
     border-bottom:1px solid var(--line);
     display:flex; align-items:center; justify-content:space-between;
     padding:14px 28px;
@@ -39,7 +38,7 @@
     width:34px;height:34px;border-radius:8px;
     background:conic-gradient(from 220deg, var(--red), var(--gold), var(--red));
     display:flex;align-items:center;justify-content:center;
-    font-family:var(--font-display);font-weight:700;color:#14161b;font-size:15px;
+    font-family:var(--font-display);font-weight:700;color:#1a0e0c;font-size:15px;
   }
   .brand-name{font-family:var(--font-display); font-weight:700; font-size:20px; letter-spacing:0.5px;}
   .brand-name span{color:var(--gold);}
@@ -108,12 +107,12 @@
   .card-art{
     height:130px; position:relative; display:flex; align-items:center; justify-content:center;
     background: radial-gradient(circle at 30% 20%, rgba(244,185,66,0.18), transparent 60%),
-                linear-gradient(135deg, var(--panel-2), #14161b);
+                linear-gradient(135deg, var(--panel-2), #1a0e0c);
     border-bottom:1px solid var(--line);
   }
   .card-art .icon{font-size:42px; filter:drop-shadow(0 4px 10px rgba(0,0,0,.4));}
   .preorder-flag{
-    position:absolute; top:10px; left:-32px; background:var(--gold); color:#14161b;
+    position:absolute; top:10px; left:-32px; background:var(--gold); color:#1a0e0c;
     font-family:var(--font-display); font-weight:700; font-size:11px; letter-spacing:1px;
     padding:3px 38px; transform:rotate(-38deg); box-shadow:0 2px 6px rgba(0,0,0,.3);
   }
@@ -198,7 +197,7 @@
   .drawer-foot{padding:18px 20px; border-top:1px solid var(--line);}
   .drawer-total{display:flex; justify-content:space-between; font-family:var(--font-display); font-weight:700; font-size:17px; margin-bottom:14px;}
   .checkout-btn{
-    width:100%; padding:13px; border-radius:8px; border:none; background:var(--gold); color:#14161b;
+    width:100%; padding:13px; border-radius:8px; border:none; background:var(--gold); color:#1a0e0c;
     font-family:var(--font-display); font-weight:700; font-size:14.5px; cursor:pointer; letter-spacing:0.5px;
   }
   .checkout-btn:hover{background:#ffcb5c;}
@@ -466,3 +465,4 @@ renderCart();
 </script>
 </body>
 </html>
+
