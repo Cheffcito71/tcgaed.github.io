@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PokéBundle TCG · Bundles &amp; Pre-órdenes</title>
+<title>The Bundle Arg TCG · Bundles &amp; Pre-órdenes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -108,7 +108,7 @@
     height:130px; position:relative; display:flex; align-items:center; justify-content:center;
     background: radial-gradient(circle at 30% 20%, rgba(244,185,66,0.18), transparent 60%),
                 linear-gradient(135deg, var(--panel-2), #1a0e0c);
-    border-bottom:1px solid var(--line);
+    border-bottom:1px solid var(--line); cursor:pointer;
   }
   .card-art .icon{font-size:42px; filter:drop-shadow(0 4px 10px rgba(0,0,0,.4));}
   .preorder-flag{
@@ -145,6 +145,43 @@
   .add-btn.pre{background:var(--blue-meg);}
   .add-btn.pre:hover{background:#3a78e0;}
   .add-btn.added{background:var(--green); pointer-events:none;}
+
+  .card-body{cursor:pointer;}
+
+  /* ---------- product modal (ficha de información) ---------- */
+  .product-modal{
+    position:fixed; top:50%; left:50%; transform:translate(-50%, -48%) scale(0.96);
+    width:480px; max-width:92vw; max-height:86vh; overflow-y:auto;
+    background:var(--panel); border:1px solid var(--line); border-radius:16px;
+    z-index:110; opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.6);
+  }
+  .product-modal.open{opacity:1; pointer-events:auto; transform:translate(-50%, -50%) scale(1);}
+  .modal-close{
+    position:absolute; top:14px; right:14px; background:var(--panel-2); border:1px solid var(--line);
+    color:var(--text); width:30px; height:30px; border-radius:8px; cursor:pointer; font-size:14px; z-index:2;
+  }
+  .modal-close:hover{border-color:var(--gold);}
+  .modal-art{
+    height:140px; display:flex; align-items:center; justify-content:center; font-size:54px;
+    background: radial-gradient(circle at 30% 20%, rgba(244,185,66,0.18), transparent 60%),
+                linear-gradient(135deg, var(--panel-2), #1a0e0c);
+    border-bottom:1px solid var(--line);
+  }
+  .modal-body{padding:22px 24px 26px;}
+  .modal-eyebrow{
+    font-family:var(--font-display); color:var(--gold); letter-spacing:1.5px;
+    font-size:11.5px; font-weight:700; text-transform:uppercase; margin-bottom:8px;
+  }
+  .modal-title{font-family:var(--font-display); font-size:22px; font-weight:700; margin:0 0 8px; line-height:1.2;}
+  .modal-desc{font-size:13px; color:var(--text-dim); margin:0 0 16px; line-height:1.5;}
+  table.modal-table{width:100%; border-collapse:collapse; font-size:13px; margin-bottom:18px;}
+  table.modal-table th, table.modal-table td{
+    text-align:left; padding:8px 10px; border-bottom:1px solid var(--line);
+  }
+  table.modal-table th{color:var(--gold); font-family:var(--font-display); font-weight:700; font-size:11.5px; letter-spacing:0.5px;}
+  table.modal-table td:nth-child(2){color:var(--text-dim); font-family:var(--font-display); font-size:12px;}
+  table.modal-table td:nth-child(3){color:var(--text); font-weight:600;}
 
 
   /* ---------- cart drawer ---------- */
@@ -205,7 +242,7 @@
 <header class="top">
   <div class="brand">
     <div class="brand-mark">PB</div>
-    <div class="brand-name">Poké<span>Bundle</span> TCG</div>
+    <div class="brand-name">The <span>Bundle Arg</span> TCG</div>
   </div>
   <nav class="filters" id="filters">
     <button class="chip active" data-filter="all">Todo</button>
@@ -233,7 +270,7 @@
   <div class="grid" id="catalog"></div>
 </main>
 
-<footer>PokéBundle TCG — proyecto educativo, Unidad 2: Registros y Claves. No afiliado a The Pokémon Company.</footer>
+<footer>The Bundle Arg TCG — proyecto educativo, Unidad 2: Registros y Claves. No afiliado a The Pokémon Company.</footer>
 
 <div class="overlay" id="overlay"></div>
 <aside class="drawer" id="drawer">
@@ -249,24 +286,44 @@
   </div>
 </aside>
 
+<div class="overlay" id="modalOverlay"></div>
+<div class="product-modal" id="productModal">
+  <button class="modal-close" id="modalClose">✕</button>
+  <div class="modal-art" id="modalArt"></div>
+  <div class="modal-body">
+    <div class="modal-eyebrow">Ficha de información · Registro Cartas_pokemon</div>
+    <h2 class="modal-title" id="modalTitle"></h2>
+    <p class="modal-desc" id="modalDesc"></p>
+    <table class="modal-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Valor</th></tr>
+      <tr><td>Dueño</td><td>AN(40)</td><td id="modalDueño"></td></tr>
+      <tr><td>Generación</td><td>N(2)</td><td id="modalGeneracion"></td></tr>
+      <tr><td>Serie</td><td>AN(30)</td><td id="modalSerie"></td></tr>
+      <tr><td>Precio</td><td>N(7)</td><td id="modalPrecio"></td></tr>
+      <tr><td>Stock</td><td>N(7)</td><td id="modalStock"></td></tr>
+    </table>
+    <button class="add-btn" id="modalAddBtn"></button>
+  </div>
+</div>
+
 <script>
 // ---------- Registro Producto (instancias) ----------
 const PRODUCTOS = [
-  {sku_bundle:"BND-SV09-001", nombre_bundle:"Bundle Iniciador Destellos de Ruina", codigo_expansion:"SV09", cantidad_sobres:4, precio_unitario:18999, stock_disponible:23, es_preorden:false, fecha_lanzamiento:null, icon:"🔥"},
-  {sku_bundle:"BND-SV09-002", nombre_bundle:"Bundle Elite Destellos de Ruina", codigo_expansion:"SV09", cantidad_sobres:8, precio_unitario:34999, stock_disponible:9, es_preorden:false, fecha_lanzamiento:null, icon:"⚡"},
-  {sku_bundle:"BND-SV08-001", nombre_bundle:"Bundle Coronas Astrales", codigo_expansion:"SV08", cantidad_sobres:6, precio_unitario:27999, stock_disponible:4, es_preorden:false, fecha_lanzamiento:null, icon:"👑"},
-  {sku_bundle:"BND-SV08-002", nombre_bundle:"Bundle Mega Coronas Astrales", codigo_expansion:"SV08", cantidad_sobres:10, precio_unitario:42999, stock_disponible:0, es_preorden:false, fecha_lanzamiento:null, icon:"✨"},
-  {sku_bundle:"BND-SV07-001", nombre_bundle:"Bundle Fuerzas Espectrales", codigo_expansion:"SV07", cantidad_sobres:6, precio_unitario:26999, stock_disponible:15, es_preorden:false, fecha_lanzamiento:null, icon:"👻"},
-  {sku_bundle:"BND-SV06-001", nombre_bundle:"Bundle Fuerzas Temporales", codigo_expansion:"SV06", cantidad_sobres:4, precio_unitario:18499, stock_disponible:31, es_preorden:false, fecha_lanzamiento:null, icon:"⏳"},
-  {sku_bundle:"BND-MEG01-001", nombre_bundle:"Bundle Iniciador Megaevoluciones", codigo_expansion:"MEG01", cantidad_sobres:6, precio_unitario:32999, stock_disponible:18, es_preorden:false, fecha_lanzamiento:null, icon:"🌀"},
-  {sku_bundle:"BND-MEG01-009", nombre_bundle:"Bundle Triple Megaevoluciones", codigo_expansion:"MEG01", cantidad_sobres:9, precio_unitario:54999, stock_disponible:12, es_preorden:false, fecha_lanzamiento:null, icon:"💠"},
-  {sku_bundle:"BND-MEG01-ETB", nombre_bundle:"Elite Trainer Box Megaevoluciones", codigo_expansion:"MEG01", cantidad_sobres:11, precio_unitario:64999, stock_disponible:3, es_preorden:false, fecha_lanzamiento:null, icon:"📦"},
-  {sku_bundle:"BND-MEG02-001", nombre_bundle:"Bundle Megaevoluciones: Resonancia (Pre-orden)", codigo_expansion:"MEG02", cantidad_sobres:6, precio_unitario:33999, stock_disponible:999, es_preorden:true, fecha_lanzamiento:"2026-09-12", icon:"🔮"},
-  {sku_bundle:"BND-MEG02-009", nombre_bundle:"Bundle Triple Megaevoluciones: Resonancia (Pre-orden)", codigo_expansion:"MEG02", cantidad_sobres:9, precio_unitario:57999, stock_disponible:999, es_preorden:true, fecha_lanzamiento:"2026-09-12", icon:"🌌"},
-  {sku_bundle:"BND-SV10-001", nombre_bundle:"Bundle Vórtice Carmesí (Pre-orden)", codigo_expansion:"SV10", cantidad_sobres:6, precio_unitario:29999, stock_disponible:999, es_preorden:true, fecha_lanzamiento:"2026-08-01", icon:"🌪️"},
-  {sku_bundle:"BND-SV10-002", nombre_bundle:"Elite Trainer Box Vórtice Carmesí (Pre-orden)", codigo_expansion:"SV10", cantidad_sobres:11, precio_unitario:61999, stock_disponible:999, es_preorden:true, fecha_lanzamiento:"2026-08-01", icon:"🧨"},
-  {sku_bundle:"BND-SV05-001", nombre_bundle:"Bundle Evolución Paldea", codigo_expansion:"SV05", cantidad_sobres:4, precio_unitario:16999, stock_disponible:27, es_preorden:false, fecha_lanzamiento:null, icon:"🌿"},
-  {sku_bundle:"BND-SV04-001", nombre_bundle:"Bundle Fuerza Salvaje", codigo_expansion:"SV04", cantidad_sobres:6, precio_unitario:23999, stock_disponible:6, es_preorden:false, fecha_lanzamiento:null, icon:"🐉"},
+  {sku_bundle:"BND-SV09-001", nombre_bundle:"Bundle Iniciador Destellos de Ruina", codigo_expansion:"SV09", cantidad_sobres:4, precio_unitario:18999, stock_disponible:23, es_preorden:false, fecha_lanzamiento:null, icon:"🔥", dueño:"The Bundle Arg TCG", generacion:9},
+  {sku_bundle:"BND-SV09-002", nombre_bundle:"Bundle Elite Destellos de Ruina", codigo_expansion:"SV09", cantidad_sobres:8, precio_unitario:34999, stock_disponible:9, es_preorden:false, fecha_lanzamiento:null, icon:"⚡", dueño:"The Bundle Arg TCG", generacion:9},
+  {sku_bundle:"BND-SV08-001", nombre_bundle:"Bundle Coronas Astrales", codigo_expansion:"SV08", cantidad_sobres:6, precio_unitario:27999, stock_disponible:4, es_preorden:false, fecha_lanzamiento:null, icon:"👑", dueño:"Tienda Paldea Cards", generacion:9},
+  {sku_bundle:"BND-SV08-002", nombre_bundle:"Bundle Mega Coronas Astrales", codigo_expansion:"SV08", cantidad_sobres:10, precio_unitario:42999, stock_disponible:0, es_preorden:false, fecha_lanzamiento:null, icon:"✨", dueño:"Tienda Paldea Cards", generacion:9},
+  {sku_bundle:"BND-SV07-001", nombre_bundle:"Bundle Fuerzas Espectrales", codigo_expansion:"SV07", cantidad_sobres:6, precio_unitario:26999, stock_disponible:15, es_preorden:false, fecha_lanzamiento:null, icon:"👻", dueño:"The Bundle Arg TCG", generacion:9},
+  {sku_bundle:"BND-SV06-001", nombre_bundle:"Bundle Fuerzas Temporales", codigo_expansion:"SV06", cantidad_sobres:4, precio_unitario:18499, stock_disponible:31, es_preorden:false, fecha_lanzamiento:null, icon:"⏳", dueño:"Colección Don Trainer", generacion:9},
+  {sku_bundle:"BND-MEG01-001", nombre_bundle:"Bundle Iniciador Megaevoluciones", codigo_expansion:"MEG01", cantidad_sobres:6, precio_unitario:32999, stock_disponible:18, es_preorden:false, fecha_lanzamiento:null, icon:"🌀", dueño:"The Bundle Arg TCG", generacion:10},
+  {sku_bundle:"BND-MEG01-009", nombre_bundle:"Bundle Triple Megaevoluciones", codigo_expansion:"MEG01", cantidad_sobres:9, precio_unitario:54999, stock_disponible:12, es_preorden:false, fecha_lanzamiento:null, icon:"💠", dueño:"The Bundle Arg TCG", generacion:10},
+  {sku_bundle:"BND-MEG01-ETB", nombre_bundle:"Elite Trainer Box Megaevoluciones", codigo_expansion:"MEG01", cantidad_sobres:11, precio_unitario:64999, stock_disponible:3, es_preorden:false, fecha_lanzamiento:null, icon:"📦", dueño:"Colección Don Trainer", generacion:10},
+  {sku_bundle:"BND-MEG02-001", nombre_bundle:"Bundle Megaevoluciones: Resonancia (Pre-orden)", codigo_expansion:"MEG02", cantidad_sobres:6, precio_unitario:33999, stock_disponible:999, es_preorden:true, fecha_lanzamiento:"2026-09-12", icon:"🔮", dueño:"The Bundle Arg TCG", generacion:10},
+  {sku_bundle:"BND-MEG02-009", nombre_bundle:"Bundle Triple Megaevoluciones: Resonancia (Pre-orden)", codigo_expansion:"MEG02", cantidad_sobres:9, precio_unitario:57999, stock_disponible:999, es_preorden:true, fecha_lanzamiento:"2026-09-12", icon:"🌌", dueño:"The Bundle Arg TCG", generacion:10},
+  {sku_bundle:"BND-SV10-001", nombre_bundle:"Bundle Vórtice Carmesí (Pre-orden)", codigo_expansion:"SV10", cantidad_sobres:6, precio_unitario:29999, stock_disponible:999, es_preorden:true, fecha_lanzamiento:"2026-08-01", icon:"🌪️", dueño:"Tienda Paldea Cards", generacion:9},
+  {sku_bundle:"BND-SV10-002", nombre_bundle:"Elite Trainer Box Vórtice Carmesí (Pre-orden)", codigo_expansion:"SV10", cantidad_sobres:11, precio_unitario:61999, stock_disponible:999, es_preorden:true, fecha_lanzamiento:"2026-08-01", icon:"🧨", dueño:"Tienda Paldea Cards", generacion:9},
+  {sku_bundle:"BND-SV05-001", nombre_bundle:"Bundle Evolución Paldea", codigo_expansion:"SV05", cantidad_sobres:4, precio_unitario:16999, stock_disponible:27, es_preorden:false, fecha_lanzamiento:null, icon:"🌿", dueño:"Colección Don Trainer", generacion:9},
+  {sku_bundle:"BND-SV04-001", nombre_bundle:"Bundle Fuerza Salvaje", codigo_expansion:"SV04", cantidad_sobres:6, precio_unitario:23999, stock_disponible:6, es_preorden:false, fecha_lanzamiento:null, icon:"🐉", dueño:"The Bundle Arg TCG", generacion:9},
 ];
 
 const EXPANSIONES = {
@@ -288,6 +345,50 @@ function stockLabel(p){
   if(p.stock_disponible <= 5) return {cls:"low", text:"Últimas " + p.stock_disponible + " u."};
   return {cls:"ok", text:p.stock_disponible + " disponibles"};
 }
+
+// ---------- Ficha de información (registro Cartas_pokemon) ----------
+function openProductModal(sku){
+  const p = PRODUCTOS.find(x=>x.sku_bundle === sku);
+  const exp = EXPANSIONES[p.codigo_expansion];
+  const disabled = (!p.es_preorden && p.stock_disponible === 0);
+
+  document.getElementById("modalArt").textContent = p.icon;
+  document.getElementById("modalTitle").textContent = p.nombre_bundle;
+  document.getElementById("modalDesc").textContent =
+    `${p.cantidad_sobres} sobres incluidos · SKU ${p.sku_bundle}`;
+  document.getElementById("modalDueño").textContent = p.dueño;
+  document.getElementById("modalGeneracion").textContent = "Gen. " + p.generacion;
+  document.getElementById("modalSerie").textContent = exp.nombre + " (" + p.codigo_expansion + ")";
+  document.getElementById("modalPrecio").textContent = fmt(p.precio_unitario);
+  document.getElementById("modalStock").textContent = p.es_preorden ? "Pre-orden (sin límite)" : p.stock_disponible + " unidades";
+
+  const btn = document.getElementById("modalAddBtn");
+  btn.className = "add-btn" + (p.es_preorden ? " pre" : "");
+  btn.disabled = disabled;
+  btn.style.opacity = disabled ? "0.4" : "1";
+  btn.style.cursor = disabled ? "not-allowed" : "pointer";
+  btn.textContent = disabled ? "Sin stock" : (p.es_preorden ? "Reservar ahora" : "Agregar al carrito");
+  btn.onclick = ()=>{
+    if(disabled) return;
+    addToCart(sku);
+    btn.textContent = "Agregado ✓";
+    btn.classList.add("added");
+    setTimeout(()=>{
+      btn.textContent = p.es_preorden ? "Reservar ahora" : "Agregar al carrito";
+      btn.classList.remove("added");
+    }, 900);
+  };
+
+  document.getElementById("productModal").classList.add("open");
+  document.getElementById("modalOverlay").classList.add("open");
+}
+function closeProductModal(){
+  document.getElementById("productModal").classList.remove("open");
+  document.getElementById("modalOverlay").classList.remove("open");
+}
+document.getElementById("modalClose").addEventListener("click", closeProductModal);
+document.getElementById("modalOverlay").addEventListener("click", closeProductModal);
+document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeProductModal(); });
 
 function renderCatalog(){
   const catalog = document.getElementById("catalog");
@@ -324,6 +425,11 @@ function renderCatalog(){
       </div>
     `;
     catalog.appendChild(card);
+
+    card.querySelector(".card-art").addEventListener("click", ()=>openProductModal(p.sku_bundle));
+    card.querySelector(".card-exp").addEventListener("click", ()=>openProductModal(p.sku_bundle));
+    card.querySelector(".card-title").addEventListener("click", ()=>openProductModal(p.sku_bundle));
+    card.querySelector(".card-desc").addEventListener("click", ()=>openProductModal(p.sku_bundle));
   });
 
   document.querySelectorAll(".add-btn:not([disabled])").forEach(btn=>{
